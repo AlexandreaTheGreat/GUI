@@ -144,7 +144,7 @@ class CameraApp:
 def main():
     root = tk.Tk()
     root.attributes('-fullscreen', True)
-    root.configure(background='light blue')
+    root.configure(background='#4bc9de')
     style = ttk.Style(root)
     style.theme_use("clam")
 
@@ -160,11 +160,11 @@ def main():
     style.configure("TertiaryButton.TButton", font=('Helvetica', 20, 'bold'), background="#e6a9ac", foreground="#ffffff", padding=30,
                     hoverbackground="#c89671")
 
-
+    style.configure("TNotebook", background='#4bc9de')
     # Correctly set the margins around the tabs to make them larger
-    style.configure("TNotebook.Tab", font=('default', 20, 'bold'), padding=[50, 15], sticky="NSEW")
+    style.configure("TNotebook.Tab", font=('default', 20, 'bold'), padding=[50, 15], sticky="NSEW", background="#475b6b")
     # Ensure active tabs have the same padding, potentially increase it to match your needs
-    style.map("TNotebook.Tab", padding=[("selected", [50, 15])])
+    style.map("TNotebook.Tab", padding=[("selected", [50, 15])], background=[("selected", "light blue"), ("active", "light blue")])
         
     # Initialize the app and set the window size
     app = CameraApp(root)
