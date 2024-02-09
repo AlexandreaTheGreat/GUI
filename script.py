@@ -157,12 +157,12 @@ def main():
     style.configure("SecondaryButton.TButton", background="#e6a9ac", foreground="#ffffff", padding=10,
                     hoverbackground="#c89671")
 
-    # Configure the notebook itself - this sets the tab position and overall padding around the tabs
-    style.configure("LeftTab.TNotebook", tabposition="wn")
 
     # Correctly set the margins around the tabs to make them larger
-    style.configure("TNotebook.Tab", font=('default', 12, 'bold'))
-
+    style.configure("TNotebook.Tab", font=('default', 20, 'bold'), padding=[20, 8], sticky="NSEW")
+    # Ensure active tabs have the same padding, potentially increase it to match your needs
+    style.map("TNotebook.Tab", padding=[("selected", [20, 8])])
+        
     # Initialize the app and set the window size
     app = CameraApp(root)
     root.geometry("{}x{}".format(root.winfo_screenwidth(), root.winfo_screenheight()))
