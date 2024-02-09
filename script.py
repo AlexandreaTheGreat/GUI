@@ -22,9 +22,9 @@ class CameraApp:
         self.info_frame = ttk.Frame(self.notebook)
 
         # Load icons and add tabs without text labels
-        home_icon = self.get_icon("C:/Users/ALEXANDREA/Downloads/home.png")
-        info_icon = self.get_icon("C:/Users/ALEXANDREA/Downloads/info.png")
-        help_icon = self.get_icon("C:/Users/ALEXANDREA/Downloads/question.png")
+        home_icon = self.get_icon("C:/Users/ALEXANDREA/GUI/assets/home.png")
+        info_icon = self.get_icon("C:/Users/ALEXANDREA/GUI/assets/info.png")
+        help_icon = self.get_icon("C:/Users/ALEXANDREA/GUI/assets/question.png")
 
         self.notebook.add(self.home_frame, text="Home", image=home_icon, compound="left")
         self.notebook.add(self.help_frame, text="Info", image=info_icon, compound="left")
@@ -54,21 +54,33 @@ class CameraApp:
         self.camera_frame = ttk.Frame(self.home_frame, style="TFrame")
         self.camera_frame.pack(fill="both", expand=True, padx=20, pady=20)
 
-        self.cap = cv2.VideoCapture(0)
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 300)
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 200)
+        # Create a frame for the camera view
+        self.camera_view_frame = tk.Frame(self.camera_frame)
+        self.camera_view_frame.pack(expand=True, fill="both", padx=10, pady=10)
 
-        self.video_label = tk.Label(self.camera_frame)
-        self.video_label.pack()
-        
-        self.capture_button = ttk.Button(self.camera_frame, text="Capture", command=self.take_picture, style="PrimaryButton.TButton")
-        self.capture_button.pack(pady=20)
+        # Create a frame for the buttons
+        self.button_frame = tk.Frame(self.camera_frame)
+        self.button_frame.pack(fill="x", padx=10, pady=(0, 10))
+
+        self.cap = cv2.VideoCapture(0)
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 800)  # Adjust width
+        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 500)  # Adjust height
+
+        self.video_label = tk.Label(self.camera_view_frame)
+        self.video_label.pack(expand=True, fill="both")
+    
+        self.video_label.bind(self.update_camera_feed)  # Bind the resize event
+
+        self.capture_button = ttk.Button(self.button_frame, text="Capture", command=self.take_picture, style="PrimaryButton.TButton")
+        self.capture_button.pack(side="left", padx=10)
 
         # Define save and retry buttons but don't pack them yet
-        self.save_button = ttk.Button(self.camera_frame, text="Save", command=self.save_image, style="PrimaryButton.TButton")
-        self.retry_button = ttk.Button(self.camera_frame, text="Retry", command=self.retry_capture, style="SecondaryButton.TButton")
+        self.save_button = ttk.Button(self.button_frame, text="Save", command=self.save_image, style="PrimaryButton.TButton")
+        self.retry_button = ttk.Button(self.button_frame, text="Retry", command=self.retry_capture, style="SecondaryButton.TButton")
 
         self.update_camera_feed()
+
+
 
 
     def take_picture(self):
@@ -84,7 +96,12 @@ class CameraApp:
         if ret:
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             frame = Image.fromarray(frame)
-            frame.thumbnail((300, 200))
+            #width, height = self.video_label.winfo_width(), self.video_label.winfo_height()
+            #width = width - 100
+            #height = height - 100
+            #print(width)
+            #print(height)
+            frame = frame.resize((1000, 600), Image.Resampling.LANCZOS)
             photo = ImageTk.PhotoImage(image=frame)
 
             self.video_label.configure(image=photo)
@@ -98,7 +115,7 @@ class CameraApp:
 
         image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         image = Image.fromarray(image)
-        image.thumbnail((300, 300))
+        image.thumbnail((600, 1000))
         photo = ImageTk.PhotoImage(image=image)
 
         self.video_label.configure(image=photo)
@@ -125,6 +142,7 @@ class CameraApp:
 
 def main():
     root = tk.Tk()
+    root.attributes('-fullscreen', True)
     root.configure(background='light blue')
     style = ttk.Style(root)
     style.theme_use("clam")
@@ -147,7 +165,7 @@ def main():
 
     # Initialize the app and set the window size
     app = CameraApp(root)
-    root.geometry("800x600")
+    root.geometry("{}x{}".format(root.winfo_screenwidth(), root.winfo_screenheight()))
     root.mainloop()
 
 if __name__ == "__main__":
