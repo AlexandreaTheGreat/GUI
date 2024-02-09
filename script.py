@@ -50,37 +50,45 @@ class CameraApp:
     def open_camera(self):
         for widget in self.home_frame.winfo_children():
             widget.destroy()
-
-        self.camera_frame = ttk.Frame(self.home_frame, style="TFrame")
-        self.camera_frame.pack(fill="both", expand=True, padx=20, pady=20)
-
-        # Create a frame for the camera view
+        
+        # Create a top frame for the back button and camera frame
+        top_frame = tk.Frame(self.home_frame)
+        top_frame.pack(fill="x", expand=False)
+        
+        back_button = ttk.Button(top_frame, text="Back", command=self.show_home_page, style="TertiaryButton.TButton")
+        back_button.grid(row=0, column=0, padx=10, pady=10, sticky="nw")
+        
+        self.camera_frame = ttk.Frame(top_frame, style="TFrame")
+        self.camera_frame.grid(row=0, column=1, padx=10, pady=10)
+        
         self.camera_view_frame = tk.Frame(self.camera_frame)
-        self.camera_view_frame.pack(expand=True, fill="both", padx=10, pady=10)
-
-        # Create a frame for the buttons
+        self.camera_view_frame.pack(expand=True, fill="both", padx=150, pady=10)
+        
         self.button_frame = tk.Frame(self.camera_frame)
         self.button_frame.pack(fill="x", padx=10, pady=(0, 10))
-
+        
         self.cap = cv2.VideoCapture(0)
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 800)  # Adjust width
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 500)  # Adjust height
-
+        
         self.video_label = tk.Label(self.camera_view_frame)
         self.video_label.pack(expand=True, fill="both")
-    
-        self.video_label.bind(self.update_camera_feed)  # Bind the resize event
+        
+        self.video_label.bind(self.update_camera_feed)
 
         self.capture_button = ttk.Button(self.button_frame, text="Capture", command=self.take_picture, style="PrimaryButton.TButton")
         self.capture_button.pack(side="bottom", padx=10)
-
-        # Define save and retry buttons but don't pack them yet
+        
         self.save_button = ttk.Button(self.button_frame, text="Save", command=self.save_image, style="PrimaryButton.TButton")
         self.retry_button = ttk.Button(self.button_frame, text="Retry", command=self.retry_capture, style="SecondaryButton.TButton")
-
+        
         self.update_camera_feed()
 
 
+    def show_home_page(self):
+        for widget in self.home_frame.winfo_children():
+            widget.destroy()
+        self.create_home_page()
 
 
     def take_picture(self):
@@ -149,12 +157,14 @@ def main():
                     hoverbackground="#48719e")
     style.configure("SecondaryButton.TButton", font=('Helvetica', 30, 'bold'), background="#e6a9ac", foreground="#ffffff", padding=50,
                     hoverbackground="#c89671")
+    style.configure("TertiaryButton.TButton", font=('Helvetica', 20, 'bold'), background="#e6a9ac", foreground="#ffffff", padding=30,
+                    hoverbackground="#c89671")
 
 
     # Correctly set the margins around the tabs to make them larger
-    style.configure("TNotebook.Tab", font=('default', 20, 'bold'), padding=[20, 8], sticky="NSEW")
+    style.configure("TNotebook.Tab", font=('default', 20, 'bold'), padding=[50, 15], sticky="NSEW")
     # Ensure active tabs have the same padding, potentially increase it to match your needs
-    style.map("TNotebook.Tab", padding=[("selected", [20, 8])])
+    style.map("TNotebook.Tab", padding=[("selected", [50, 15])])
         
     # Initialize the app and set the window size
     app = CameraApp(root)
