@@ -41,8 +41,8 @@ class CameraApp:
         return photo_image
 
     def create_home_page(self):
-        title_label = ttk.Label(self.home_frame, text="Knee OA Severity Scanner", font=("Helvetica", 18), style="Title.TLabel")
-        title_label.pack(pady=(20, 50))
+        title_label = ttk.Label(self.home_frame, text="Knee OA Severity Scanner", font=("Helvetica", 50, 'bold'), style="Title.TLabel")
+        title_label.pack(pady=100)
 
         start_button = ttk.Button(self.home_frame, text="Start", command=self.open_camera, style="PrimaryButton.TButton")
         start_button.pack()
@@ -72,7 +72,7 @@ class CameraApp:
         self.video_label.bind(self.update_camera_feed)  # Bind the resize event
 
         self.capture_button = ttk.Button(self.button_frame, text="Capture", command=self.take_picture, style="PrimaryButton.TButton")
-        self.capture_button.pack(side="left", padx=10)
+        self.capture_button.pack(side="bottom", padx=10)
 
         # Define save and retry buttons but don't pack them yet
         self.save_button = ttk.Button(self.button_frame, text="Save", command=self.save_image, style="PrimaryButton.TButton")
@@ -96,12 +96,7 @@ class CameraApp:
         if ret:
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             frame = Image.fromarray(frame)
-            #width, height = self.video_label.winfo_width(), self.video_label.winfo_height()
-            #width = width - 100
-            #height = height - 100
-            #print(width)
-            #print(height)
-            frame = frame.resize((1000, 600), Image.Resampling.LANCZOS)
+            frame = frame.resize((700, 500), Image.Resampling.LANCZOS)
             photo = ImageTk.PhotoImage(image=frame)
 
             self.video_label.configure(image=photo)
@@ -121,10 +116,8 @@ class CameraApp:
         self.video_label.configure(image=photo)
         self.video_label.image = photo
 
-        save_button = ttk.Button(self.camera_frame, text="Save", command=self.save_image, style="PrimaryButton.TButton")
-        save_button.pack(side="left", padx=20)
-        retry_button = ttk.Button(self.camera_frame, text="Retry", command=self.retry_capture, style="SecondaryButton.TButton")
-        retry_button.pack(side="right", padx=20)
+        self.save_button.pack(side="left", padx=10, pady=10)  # Adjust padding as needed
+        self.retry_button.pack(side="right", padx=10, pady=10)
 
     def save_image(self):
         if self.captured_frame is not None:
@@ -149,12 +142,12 @@ def main():
 
     # Configure the general frame and label styles
     style.configure("TFrame", background="#f0f0f0")
-    style.configure("Title.TLabel", background="#f0f0f0")
+    style.configure("Title.TLabel", background="#f0f0f0", padding=20)
 
     # Configure the button styles
-    style.configure("PrimaryButton.TButton", background="#789dc4", foreground="#ffffff", padding=10,
+    style.configure("PrimaryButton.TButton", font=('Helvetica', 30, 'bold'), background="#789dc4", foreground="#ffffff", padding=50,
                     hoverbackground="#48719e")
-    style.configure("SecondaryButton.TButton", background="#e6a9ac", foreground="#ffffff", padding=10,
+    style.configure("SecondaryButton.TButton", font=('Helvetica', 30, 'bold'), background="#e6a9ac", foreground="#ffffff", padding=50,
                     hoverbackground="#c89671")
 
 
